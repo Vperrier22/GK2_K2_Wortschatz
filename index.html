@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meine Stadt – Wortschatz-Apps</title>
+<style>
+@font-face{font-family:Chewy;src:url(chewy.woff2) format("woff2")}
+@font-face{font-family:Nunito;font-weight:400;src:url(nunito-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:Nunito;font-weight:700;src:url(nunito-latin-700-normal.woff2) format("woff2")}
+@font-face{font-family:Nunito;font-weight:900;src:url(nunito-latin-900-normal.woff2) format("woff2")}
+:root{--navy:#1B2A52;--coral:#FF6F59;--yel:#FFC93C;--grn:#3CB371;--lime:#A5D85A;--blue:#3BA7DB;--pur:#7B5EA7;--bg:#F6F8FB;--line:#E3E6EC;--muted:#5C6781;--ok:#2E9E5B;--ko:#E23D28}
+*{box-sizing:border-box}
+body{margin:0;font-family:Nunito,system-ui,sans-serif;background:var(--bg);color:var(--navy);font-size:16px;line-height:1.4}
+button{font-family:inherit;cursor:pointer}
+header{background:var(--navy);color:#fff;padding:24px 16px 28px;position:relative;overflow:hidden}
+header .in{max-width:980px;margin:0 auto;position:relative;z-index:1}
+.tag{display:inline-block;border:2px solid #AEB7CC;border-radius:20px;padding:3px 14px;font-weight:900;font-size:12px;letter-spacing:1px}
+h1{font-family:Chewy;font-weight:400;font-size:clamp(38px,8vw,62px);line-height:1;margin:12px 0 6px;letter-spacing:1px;text-transform:uppercase}
+h1 em{font-style:normal;color:var(--yel)}
+header p{margin:0;color:#D7DCE8;max-width:72%}
+.badge{position:absolute;right:16px;top:20px;width:88px;height:88px;border-radius:50%;background:var(--coral);color:#fff;text-align:center;font-family:Chewy;font-size:22px;line-height:1.05;padding-top:20px;transform:rotate(8deg);z-index:1}
+.stripes{position:absolute;right:-40px;bottom:-34px;width:200px;height:70px;transform:skewY(-12deg)}
+.stripes i{display:block;height:14px;margin-bottom:6px}
+main{max-width:980px;margin:0 auto;padding:18px 16px 50px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.app{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:16px;text-align:left;color:var(--navy);display:flex;flex-direction:column;gap:6px;transition:transform .15s}
+.app:hover{transform:translateY(-3px);border-color:var(--blue)}
+.app .ic{width:58px;height:58px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:30px}
+.app b{font-family:Chewy;font-weight:400;font-size:21px}
+.app small{color:var(--muted);font-size:13.5px}
+.best{align-self:flex-start;background:#EEF6E6;color:#2E8B57;border-radius:10px;padding:0 8px;font-size:12px;font-weight:900}
+.best:empty{display:none}
+.top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.back{border:none;background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:8px 14px;font-weight:900;color:var(--navy)}
+.title{font-family:Chewy;font-size:clamp(22px,5vw,30px);flex:1}
+.panel{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:16px}
+.fr{color:var(--muted);font-style:italic;font-size:14px;margin:0 0 12px}
+.seg{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.seg button{border:1.5px solid var(--line);background:#fff;border-radius:16px;padding:5px 12px;font-weight:900;font-size:13px;color:var(--navy)}
+.seg button.on{background:var(--yel);border-color:var(--yel)}
+.stat{display:flex;gap:16px;font-weight:900;color:var(--muted);font-size:14px;margin-bottom:10px;flex-wrap:wrap}
+.btn{border:none;border-radius:14px;padding:10px 18px;font-weight:900;font-size:15px;background:var(--navy);color:#fff}
+.btn.y{background:var(--yel);color:var(--navy)}.btn.g{background:var(--grn)}.btn.l{background:#EEF1F6;color:var(--navy)}
+.row{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:14px}
+.end{text-align:center;padding:16px 0}
+.end .big{font-family:Chewy;font-size:44px;color:var(--coral);line-height:1}
+.stars{font-size:32px;letter-spacing:4px;margin:6px 0}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.shake{animation:shake .3s}
+/* pairs */
+.pairs{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px}
+.pc{border:2px solid var(--line);background:#fff;border-radius:14px;padding:10px;font-weight:800;font-size:15.5px;color:var(--navy);min-height:52px;display:flex;align-items:center;justify-content:center;text-align:center;transition:all .15s}
+.pc img{max-width:100%;max-height:96px;border-radius:8px;display:block}
+.pc:hover:not(.done){border-color:var(--blue)}
+.pc.sel{border-color:var(--blue);background:#EAF5FB;box-shadow:0 0 0 3px #BFE3F5}
+.pc.done{cursor:default;color:#1E7A44;border-color:var(--ok);background:#E3F6EA}
+.pc.bad{border-color:var(--ko);background:#FDE7E3}
+.pc.done .tagn{display:inline-flex}
+.tagn{display:none;width:22px;height:22px;border-radius:50%;background:var(--ok);color:#fff;font-size:12px;align-items:center;justify-content:center;margin-right:6px;flex:none}
+/* groups */
+.pool{display:flex;flex-wrap:wrap;gap:8px;min-height:50px;padding:10px;background:#F6F8FB;border-radius:14px;margin-bottom:14px;justify-content:center}
+.chip{border:2px solid var(--line);background:#fff;border-radius:12px;padding:7px 12px;font-weight:800;font-size:15px;color:var(--navy)}
+.chip.sel{border-color:var(--blue);background:#EAF5FB;box-shadow:0 0 0 3px #BFE3F5}
+.chip.ok{border-color:var(--ok);background:#E3F6EA;color:#1E7A44;cursor:default}
+.groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.grp{border:2.5px dashed var(--line);border-radius:16px;min-height:150px;padding:8px;background:#fff;text-align:center}
+.grp h4{margin:0 0 8px;font-family:Chewy;font-weight:400;font-size:22px}
+.grp .chip{display:inline-block;margin:3px;font-size:13.5px;padding:4px 9px}
+.grp.hot{border-color:var(--blue);background:#F3FAFE}
+/* memory */
+.mem{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;max-width:640px;margin:0 auto}
+.mc{aspect-ratio:1/0.8;perspective:800px;border:none;background:none;padding:0}
+.mc .in{position:relative;width:100%;height:100%;transition:transform .4s;transform-style:preserve-3d}
+.mc.up .in,.mc.done .in{transform:rotateY(180deg)}
+.mc .f,.mc .b{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:14px;display:flex;align-items:center;justify-content:center;padding:6px;text-align:center;font-weight:900;font-size:clamp(12px,2.6vw,16px)}
+.mc .f{background:var(--navy);color:var(--yel);font-family:Chewy;font-size:30px;border:3px solid #fff;box-shadow:0 2px 0 var(--line)}
+.mc .b{background:#fff;border:2px solid var(--blue);transform:rotateY(180deg);color:var(--navy)}
+.mc .b.de{background:#FFF6DC;border-color:var(--yel)}
+.mc.done .b{border-color:var(--ok);background:#E3F6EA}
+/* gap text */
+.gaps .it{padding:9px 0;border-bottom:1px dashed var(--line);display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.gaps input{font:inherit;font-weight:800;color:var(--navy);border:2px solid var(--line);border-radius:10px;padding:4px 8px;width:140px}
+.gaps input:focus{outline:none;border-color:var(--blue)}
+.gaps .good{border-color:var(--ok);background:#E3F6EA}.gaps .badi{border-color:var(--ko);background:#FDE7E3}
+.bank{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.bank span{border:1.5px solid #C9CEDA;border-radius:12px;padding:2px 10px;font-weight:800;font-size:14px;background:#fff}
+.bank span.used{opacity:.35;text-decoration:line-through}
+.n{flex:none;width:24px;height:24px;border-radius:50%;background:var(--blue);color:#fff;font-weight:900;font-size:13px;display:inline-flex;align-items:center;justify-content:center}
+/* millionaire */
+.mil{display:grid;grid-template-columns:1fr 170px;gap:16px}
+.ladder{display:flex;flex-direction:column-reverse;gap:4px}
+.ladder div{border-radius:10px;padding:4px 10px;font-weight:900;font-size:14px;background:#F6F8FB;color:var(--muted);display:flex;justify-content:space-between}
+.ladder div.cur{background:var(--yel);color:var(--navy)}
+.ladder div.won{background:#E3F6EA;color:#1E7A44}
+.ladder div.safe{border:2px solid var(--grn)}
+.mq{background:var(--navy);color:#fff;border-radius:18px;padding:18px;text-align:center;font-size:20px;font-weight:900;margin-bottom:12px}
+.mopts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mo{border:2px solid var(--navy);background:#fff;border-radius:30px;padding:12px;font-weight:900;font-size:16px;color:var(--navy);text-align:left}
+.mo b{color:var(--coral);margin-right:6px}
+.mo.ok{background:#E3F6EA;border-color:var(--ok)}.mo.ko{background:#FDE7E3;border-color:var(--ko)}
+.mo[disabled]{cursor:default}.mo.gone{visibility:hidden}
+/* hangman */
+.hg{display:grid;grid-template-columns:200px 1fr;gap:16px;align-items:center}
+.word{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:10px 0}
+.word span{width:32px;height:42px;border-bottom:4px solid var(--navy);font-family:Chewy;font-size:30px;text-align:center;line-height:42px}
+.word span.sp{border:none}
+.keys{display:flex;flex-wrap:wrap;gap:5px;justify-content:center}
+.keys button{width:38px;height:40px;border:2px solid var(--line);background:#fff;border-radius:10px;font-weight:900;font-size:16px;color:var(--navy)}
+.keys button.hit{background:#E3F6EA;border-color:var(--ok);color:#1E7A44}
+.keys button.miss{background:#FDE7E3;border-color:var(--ko);color:var(--ko)}
+.clue{text-align:center;font-size:18px;font-weight:900}
+.clue small{display:block;color:var(--muted);font-weight:700;font-size:13px}
+.msg{text-align:center;font-weight:900;min-height:26px;margin-top:10px}
+.msg.ok{color:var(--ok)}.msg.ko{color:var(--ko)}
+footer{text-align:center;color:var(--muted);font-size:13px;padding:10px 16px 40px}
+@media (max-width:640px){.badge{width:66px;height:66px;font-size:16px;padding-top:15px;right:10px}header p{max-width:100%}header .in{padding-right:64px}.tag{font-size:10px;padding:2px 10px}.mil{grid-template-columns:1fr}.ladder{display:none}.hg{grid-template-columns:1fr}.hg svg{max-width:160px;margin:0 auto}.mopts{grid-template-columns:1fr}.mem{grid-template-columns:repeat(3,1fr)}.pc{font-size:14px}}
+</style>
+</head>
+<body>
+<header><div class="in">
+<span class="tag">GENI@L KLICK 9 · WORT-SCHATZ S. 11–15</span>
+<h1>Meine <em>Stadt!</em></h1>
+<p>Apps de vocabulaire du chapitre 2 : la ville, les magasins, les prépositions, les affaires d'école et l'histoire de Klara.</p>
+</div>
+<div class="badge">Wort-<br>schatz</div>
+<div class="stripes"><i style="background:var(--grn)"></i><i style="background:var(--lime)"></i><i style="background:var(--yel)"></i></div>
+</header>
+<main id="main"></main>
+<footer>V. Kalinijabo · geni@l klick 9CO · Kapitel 2 – Wort-Schatz S. 11–15</footer>
+<script>
+"use strict";
+const $ = (s, r = document) => r.querySelector(s);
+const h = (t, a = {}, html = "") => { const e = document.createElement(t); for (const k in a) e.setAttribute(k, a[k]); if (html !== "") e.innerHTML = html; return e; };
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const pick = (a, n) => shuffle(a).slice(0, n);
+const rnd = a => a[Math.floor(Math.random() * a.length)];
+const uniqPick = (arr, n) => { const out = [], d = new Set(), f = new Set(); for (const x of shuffle(arr)) { if (d.has(x.full) || f.has(x.fr)) continue; d.add(x.full); f.add(x.fr); out.push(x); if (out.length === n) break; } return out; };
+const norm = s => (s || "").trim().toLowerCase().replace(/[!.?,]/g, "").replace(/ß/g, "ss").replace(/ae/g, "ä").replace(/oe/g, "ö").replace(/ue/g, "ü").replace(/\s+/g, " ");
+const store = { get(k) { try { return JSON.parse(localStorage.getItem("gk9ws2_" + k)); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem("gk9ws2_" + k, JSON.stringify(v)); } catch (e) {} } };
+const saveBest = (k, txt, val) => { const b = store.get(k); if (!b || val > b.v) store.set(k, { t: txt, v: val }); };
+
+/* ---------- Wort-Schatz S. 11–15 (sans le thème « Weg ») ---------- */
+// [deutsch, français, thème, article (m/f/n) ou ""]
+const T = { stadt: "In der Stadt", gesch: "Geschäfte", leb: "Lebensmittel & Waren", schul: "Schulsachen", gesch2: "Eine Geschichte" };
+const V = [
+ ["Stadt","la ville","stadt","f"],["Strasse","la rue","stadt","f"],["Auto","la voiture","stadt","n"],["U-Bahn","le métro","stadt","f"],["Bus","le bus","stadt","m"],["Haus","la maison","stadt","n"],["Kino","le cinéma","stadt","n"],
+ ["gehen","aller à pied","stadt",""],["fahren","aller (en véhicule)","stadt",""],["Zentrum","le centre","stadt","n"],["Hotel","l'hôtel","stadt","n"],["Sportplatz","le terrain de sport","stadt","m"],["Bahnhof","la gare","stadt","m"],
+ ["Fahrkarte","le billet","stadt","f"],["warten","attendre","stadt",""],["Bank","le banc","stadt","f"],["Ort","le lieu, l'endroit","stadt","m"],["Haltestelle","l'arrêt","stadt","f"],["aussteigen","descendre (d'un véhicule)","stadt",""],
+ ["Marktplatz","la place du marché","stadt","m"],["nah","proche","stadt",""],["weit","loin","stadt",""],["Jugendzentrum","le centre de jeunes","stadt","n"],["Rathaus","l'hôtel de ville","stadt","n"],["Spielplatz","le terrain de jeu","stadt","m"],
+ ["kaufen","acheter","gesch",""],["kosten","coûter","gesch",""],["Supermarkt","le supermarché","gesch","m"],["Restaurant","le restaurant","gesch","n"],["Bäckerei","la boulangerie","gesch","f"],["Kiosk","le kiosque","gesch","m"],
+ ["Apotheke","la pharmacie","gesch","f"],["Post","la poste","gesch","f"],["Bank ","la banque","gesch","f"],["einkaufen","faire les courses","gesch",""],["bezahlen","payer","gesch",""],["shoppen","faire du shopping","gesch",""],
+ ["Kaufhaus","le grand magasin","gesch","n"],["Geschäft","le magasin","gesch","n"],["Kasse","la caisse","gesch","f"],
+ ["Shampoo","le shampoing","leb","n"],["Wurst","la saucisse","leb","f"],["Käse","le fromage","leb","m"],["Banane","la banane","leb","f"],["Brot","le pain","leb","n"],["Brötchen","le petit pain","leb","n"],
+ ["Medikament","le médicament","leb","n"],["Zeitschrift","le magazine","leb","f"],["Zeitung","le journal","leb","f"],
+ ["Heft","le cahier","schul","n"],["Buch","le livre","schul","n"],["Papier","le papier","schul","n"],["Stift","le stylo","schul","m"],["Blatt","la feuille","schul","n"],["Kuli","le stylo (à bille)","schul","m"],
+ ["Bleistift","le crayon gris","schul","m"],["Radiergummi","la gomme","schul","m"],["Lineal","la règle","schul","n"],["Schere","les ciseaux","schul","f"],
+ ["Was ist los?","Que se passe-t-il ?","gesch2",""],["zuerst","d'abord","gesch2",""],["dann","après, ensuite","gesch2",""],["da sein","être là","gesch2",""],["weg sein","avoir disparu","gesch2",""],["Glück haben","avoir de la chance","gesch2",""],
+ ["So ein Mist!","Mince alors !","gesch2",""],["Handy","le portable","gesch2","n"],["Portemonnaie","le porte-monnaie","gesch2","n"],["Akku","la batterie","gesch2","m"],["leer","vide","gesch2",""],["klingeln","sonner","gesch2",""],
+ ["zu spät sein","être trop tard","gesch2",""],["Mensch","l'être humain","gesch2","m"],["Roboter","le robot","gesch2","m"]
+].map(([d, f, t, g]) => ({ de: d.trim(), fr: f, t, g, full: g ? { m: "der", f: "die", n: "das" }[g] + " " + d.trim() : d.trim() }));
+const NOUNS = V.filter(x => x.g);
+const PRAEP = [["an","Sie steht an der Wand.","à"],["auf","Sie ist auf dem Bett.","sur"],["unter","Sie schläft unter dem Bett.","sous"],["vor","Sie schläft vor dem Bett.","devant"],["hinter","Sie liegt hinter dem Bett.","derrière"],["in","Sie ist im Bett.","dans"],["neben","Sie schläft neben dem Bett.","à côté de"],["ueber","Sie ist über dem Bett.","au-dessus de"],["zwischen","Sie schläft zwischen den Stühlen.","entre"]];
+const pname = p => p === "ueber" ? "über" : p;
+
+/* ---------- theme selector ---------- */
+function themeSeg(host, cb, withP = false) {
+  const opts = [["all", "Tout"]].concat(Object.entries(T));
+  const seg = h("div", { class: "seg" });
+  opts.forEach(([k, l], i) => { const b = h("button", i === 0 ? { class: "on" } : {}, l); b.onclick = () => { seg.querySelectorAll("button").forEach(x => x.classList.remove("on")); b.classList.add("on"); cb(k); }; seg.appendChild(b); });
+  host.appendChild(seg);
+}
+const pool = k => k === "all" ? V : V.filter(x => x.t === k);
+const stars = p => p >= .9 ? "⭐⭐⭐" : p >= .7 ? "⭐⭐" : p >= .5 ? "⭐" : "💪";
+
+/* ---------- APPS ---------- */
+const APPS = [];
+const app = (id, name, desc, ic, bg, build) => APPS.push({ id, name, desc, ic, bg, build });
+
+/* 1. Paare zuordnen */
+function pairGame(host, makePairs, key) {
+  let pairs, sel = null, errors, found, t0;
+  const start = () => {
+    pairs = makePairs(); errors = 0; found = 0; t0 = Date.now(); sel = null;
+    host.innerHTML = `<div class="stat"><span>✔ <b id="pf">0</b>/${pairs.length}</span><span>✘ <b id="pe">0</b> erreur(s)</span></div><div class="pairs"><div class="colL" style="display:flex;flex-direction:column;gap:10px"></div><div class="colR" style="display:flex;flex-direction:column;gap:10px"></div></div>`;
+    const L = $(".colL", host), R = $(".colR", host);
+    const mk = (side, i, html) => { const b = h("button", { class: "pc" }, `<span class="tagn"></span>${html}`); b.dataset.i = i; b.dataset.s = side; b.onclick = () => click(b); return b; };
+    shuffle(pairs.map((p, i) => [i, p[0]])).forEach(([i, x]) => L.appendChild(mk("L", i, x)));
+    shuffle(pairs.map((p, i) => [i, p[1]])).forEach(([i, x]) => R.appendChild(mk("R", i, x)));
+  };
+  const click = b => {
+    if (b.classList.contains("done")) return;
+    if (!sel || sel.dataset.s === b.dataset.s) { if (sel) sel.classList.remove("sel"); sel = b; b.classList.add("sel"); return; }
+    if (sel.dataset.i === b.dataset.i) {
+      found++; [sel, b].forEach(x => { x.classList.remove("sel"); x.classList.add("done"); x.querySelector(".tagn").textContent = found; });
+      $("#pf", host).textContent = found; sel = null;
+      if (found === pairs.length) setTimeout(end, 500);
+    } else { errors++; $("#pe", host).textContent = errors; [sel, b].forEach(x => { x.classList.add("bad", "shake"); setTimeout(() => x.classList.remove("bad", "shake"), 450); }); sel.classList.remove("sel"); sel = null; }
+  };
+  const end = () => {
+    const s = Math.round((Date.now() - t0) / 1000), p = Math.max(0, 1 - errors / pairs.length);
+    saveBest(key, `${errors} erreur(s), ${s} s`, 1000 - errors * 50 - s);
+    host.innerHTML = `<div class="end"><div class="big">Bravo!</div><div class="stars">${stars(p)}</div><p><b>${pairs.length} paires</b> trouvées en <b>${s} secondes</b> avec <b>${errors} erreur(s)</b>.</p><div class="row"><button class="btn y">Nochmal ↻</button></div></div>`;
+    $(".btn", host).onclick = start;
+  };
+  start();
+}
+app("paare", "Paare zuordnen", "Associe le mot allemand et sa traduction.", "🔗", "#EAF5FB", body => {
+  body.innerHTML = `<p class="fr">Clique sur un mot allemand, puis sur sa traduction française. Choisis un thème.</p>`;
+  let theme = "all"; const g = h("div");
+  themeSeg(body, k => { theme = k; run(); }); body.appendChild(g);
+  const run = () => pairGame(g, () => uniqPick(pool(theme), 8).map(x => [x.full, x.fr]), "paare");
+  run();
+});
+
+/* 2. Präpositionen – Bilder */
+app("bilder", "Bilder zuordnen", "Associe chaque image à la bonne phrase (prépositions).", "🛏️", "#F1ECF8", body => {
+  body.innerHTML = `<p class="fr">Où est Mia ? Clique sur une image, puis sur la phrase qui va avec.</p>`;
+  const g = h("div"); body.appendChild(g);
+  pairGame(g, () => pick(PRAEP, 6).map(([f, s]) => [`<img src="img/${f}.jpg" alt="">`, s]), "bilder");
+});
+
+/* 3. Gruppenzuordnung */
+app("gruppen", "Gruppenzuordnung", "Classe les mots : der, die, das… ou par thème.", "🗂️", "#EEF6E6", body => {
+  body.innerHTML = `<p class="fr">Clique sur un mot, puis sur le bon groupe.</p>`;
+  const seg = h("div", { class: "seg" }, `<button class="on" data-m="art">der · die · das</button><button data-m="thema">Thèmes</button>`);
+  const g = h("div"); body.append(seg, g);
+  let mode = "art";
+  seg.querySelectorAll("button").forEach(b => b.onclick = () => { seg.querySelectorAll("button").forEach(x => x.classList.remove("on")); b.classList.add("on"); mode = b.dataset.m; run(); });
+  const run = () => {
+    let items, groups;
+    if (mode === "art") { items = uniqPick(NOUNS, 12).map(x => ({ txt: x.de, g: x.g })); groups = [["m", "der", "#3BA7DB"], ["f", "die", "#FF6F59"], ["n", "das", "#3CB371"]]; }
+    else { const ks = ["gesch", "leb", "schul", "stadt"]; items = ks.flatMap(k => uniqPick(NOUNS.filter(x => x.t === k), 3)).map(x => ({ txt: x.de, g: x.t })); groups = [["stadt", "In der Stadt", "#7B5EA7"], ["gesch", "Geschäfte", "#FF6F59"], ["leb", "Lebensmittel", "#3CB371"], ["schul", "Schulsachen", "#3BA7DB"]]; }
+    items = shuffle(items); let sel = null, err = 0, ok = 0;
+    g.innerHTML = `<div class="stat"><span>✔ <b class="ok">0</b>/${items.length}</span><span>✘ <b class="er">0</b></span></div><div class="pool"></div><div class="groups"></div>`;
+    const P = $(".pool", g), G = $(".groups", g);
+    items.forEach(it => { const c = h("button", { class: "chip" }, it.txt); c._g = it.g; c.onclick = () => { if (c.classList.contains("ok")) return; if (sel) sel.classList.remove("sel"); sel = c; c.classList.add("sel"); }; P.appendChild(c); });
+    groups.forEach(([k, l, col]) => { const d = h("div", { class: "grp" }, `<h4 style="color:${col}">${l}</h4>`); d.style.borderColor = col + "66"; d.onclick = () => {
+      if (!sel) { d.classList.add("shake"); setTimeout(() => d.classList.remove("shake"), 300); return; }
+      if (sel._g === k) { sel.classList.remove("sel"); sel.classList.add("ok"); d.appendChild(sel); sel = null; ok++; $(".ok", g).textContent = ok; if (ok === items.length) setTimeout(() => { saveBest("gruppen", `${err} erreur(s)`, 100 - err); g.insertAdjacentHTML("beforeend", `<div class="end"><div class="big">Super!</div><div class="stars">${stars(1 - err / items.length)}</div><p>${err} erreur(s)</p><div class="row"><button class="btn y">Nochmal ↻</button></div></div>`); $(".end .btn", g).onclick = run; }, 300); }
+      else { err++; $(".er", g).textContent = err; sel.classList.add("shake"); const s = sel; setTimeout(() => s.classList.remove("shake"), 350); }
+    }; G.appendChild(d); });
+  };
+  run();
+});
+
+/* 4. Memory */
+app("memory", "Memory", "Retrouve les paires allemand – français.", "🃏", "#FFF6DC", body => {
+  body.innerHTML = `<p class="fr">Retourne deux cartes : un mot allemand et sa traduction. Trouve toutes les paires avec le moins d'essais possible !</p>`;
+  let theme = "all"; const g = h("div");
+  themeSeg(body, k => { theme = k; run(); }); body.appendChild(g);
+  const run = () => {
+    const ws = uniqPick(pool(theme), 8); let up = [], tries = 0, found = 0, lock = false;
+    const cards = shuffle(ws.flatMap((x, i) => [{ i, t: x.full, de: true }, { i, t: x.fr }]));
+    g.innerHTML = `<div class="stat"><span>Essais : <b class="tr">0</b></span><span>Paires : <b class="fd">0</b>/${ws.length}</span></div><div class="mem"></div>`;
+    const M = $(".mem", g);
+    cards.forEach(c => { const b = h("button", { class: "mc" }, `<div class="in"><div class="f">?</div><div class="b ${c.de ? "de" : ""}">${c.t}</div></div>`); b._c = c; b.onclick = () => {
+      if (lock || b.classList.contains("up") || b.classList.contains("done")) return;
+      b.classList.add("up"); up.push(b);
+      if (up.length === 2) { tries++; $(".tr", g).textContent = tries; const [a, d] = up;
+        if (a._c.i === d._c.i && a._c.de !== d._c.de) { a.classList.add("done"); d.classList.add("done"); up = []; found++; $(".fd", g).textContent = found;
+          if (found === ws.length) setTimeout(() => { saveBest("memory", `${tries} essais`, 100 - tries); g.insertAdjacentHTML("beforeend", `<div class="end"><div class="big">${tries} essais</div><div class="stars">${tries <= 12 ? "⭐⭐⭐" : tries <= 16 ? "⭐⭐" : "⭐"}</div><div class="row"><button class="btn y">Nochmal ↻</button></div></div>`); $(".end .btn", g).onclick = run; }, 500); }
+        else { lock = true; setTimeout(() => { a.classList.remove("up"); d.classList.remove("up"); up = []; lock = false; }, 900); } }
+    }; M.appendChild(b); });
+  };
+  run();
+});
+
+/* 5. Lückentext */
+const GAPS = [["Jakob trainiert auf dem", "Sportplatz", "."], ["Am", "Bahnhof", "kaufe ich Fahrkarten."], ["Klara", "wartet", "auf den Bus."], ["Klara wartet auf der", "Bank", "im Park."],
+ ["Klara steigt an der nächsten Haltestelle", "aus", "."], ["Alles ist ganz", "nah", "."], ["Das Kino ist nicht", "weit", "."], ["Die Jacke", "kostet", "nicht viel."],
+ ["In der", "Bäckerei", "gibt es Brot und Brötchen."], ["Am", "Kiosk", "gibt es Zeitschriften und Zeitungen."], ["In der Apotheke kann man", "Medikamente", "kaufen."],
+ ["Ich bezahle an der", "Kasse", "."], ["Sie hat kein", "Glück", "."], ["Der", "Akku", "ist leer."], ["Das Handy", "klingelt", "nicht."], ["Es ist zu", "spät", "."], ["So ein", "Mist", "!"], ["Jakob wartet", "vor", "der Bank."]];
+app("luecken", "Lückentext", "Complète les phrases du Wort-Schatz.", "✏️", "#FDE7E3", body => {
+  body.innerHTML = `<p class="fr">Écris le mot qui manque. Les mots de la liste t'aident (ils se barrent quand tu les utilises correctement).</p>`;
+  const g = h("div"); body.appendChild(g);
+  const run = () => {
+    const items = pick(GAPS, 10);
+    g.innerHTML = `<div class="bank">${shuffle(items).map(x => `<span>${x[1]}</span>`).join("")}</div><div class="gaps"></div><div class="row"><button class="btn g">✔ Vérifier</button><button class="btn y">🔀 Neue Sätze</button></div><div class="msg"></div>`;
+    const G = $(".gaps", g);
+    items.forEach(([a, w, b], i) => { const it = h("div", { class: "it" }, `<span class="n">${i + 1}</span><span>${a}</span>`); const inp = h("input", { type: "text", autocomplete: "off", autocapitalize: "off", spellcheck: "false" }); inp._a = w; it.append(inp, h("span", {}, b)); G.appendChild(it); });
+    $(".btn.g", g).onclick = () => { let ok = 0; const used = []; G.querySelectorAll("input").forEach(inp => { const good = norm(inp.value) === norm(inp._a); inp.classList.toggle("good", good); inp.classList.toggle("badi", !good); if (good) { ok++; used.push(inp._a); } });
+      g.querySelectorAll(".bank span").forEach(s => s.classList.toggle("used", used.includes(s.textContent)));
+      const m = $(".msg", g); m.className = "msg " + (ok === items.length ? "ok" : "ko"); m.textContent = `${ok}/${items.length} ✔` + (ok === items.length ? " – Bravo, tout est juste ! 🎉" : " – Corrige les cases rouges."); saveBest("luecken", `${ok}/${items.length}`, ok); };
+    $(".btn.y", g).onclick = run;
+  };
+  run();
+});
+
+/* 6. Millionenspiel */
+app("million", "Millionenspiel", "Réponds juste pour monter jusqu'au million !", "💰", "#FFF6DC", body => {
+  const STEPS = ["50", "100", "200", "500", "1 000", "2 000", "5 000", "10 000", "50 000", "100 000", "500 000", "1 000 000"];
+  const gen = level => {
+    const k = level < 4 ? rnd(["fr2de", "de2fr", "art"]) : level < 8 ? rnd(["fr2de", "praep", "art", "de2fr"]) : rnd(["fr2de", "praep", "gap"]);
+    if (k === "art") { const x = rnd(NOUNS); return { q: `Quel est l'article ? … ${x.de}`, o: ["der", "die", "das", "den"], a: { m: "der", f: "die", n: "das" }[x.g] }; }
+    if (k === "praep") { const [p, s, f] = rnd(PRAEP); return { q: `Comment dit-on « ${f} » ?`, o: [pname(p)].concat(pick(PRAEP.filter(x => x[0] !== p).map(x => pname(x[0])), 3)), a: pname(p) }; }
+    if (k === "gap") { const [a, w, b] = rnd(GAPS); return { q: `${a} ___ ${b}`, o: [w].concat(pick(GAPS.filter(x => x[1] !== w).map(x => x[1]), 3)), a: w }; }
+    const x = rnd(V), others = pick(V.filter(y => y.fr !== x.fr && y.full !== x.full), 3);
+    return k === "fr2de" ? { q: `Comment dit-on « ${x.fr} » ?`, o: [x.full].concat(others.map(y => y.full)), a: x.full } : { q: `Que signifie « ${x.full} » ?`, o: [x.fr].concat(others.map(y => y.fr)), a: x.fr };
+  };
+  let lvl, joker;
+  const start = () => { lvl = 0; joker = true; show(); };
+  const show = () => {
+    const q = gen(lvl), opts = shuffle(q.o);
+    body.innerHTML = `<p class="fr">Une erreur et c'est fini ! Les paliers verts sont gagnés pour de bon. Tu as un joker 50:50.</p><div class="mil"><div><div class="stat"><span>Question ${lvl + 1}/12</span><span>en jeu : ${STEPS[lvl]} Punkte</span></div><div class="mq">${q.q}</div><div class="mopts"></div><div class="row"><button class="btn y" ${joker ? "" : "disabled style='opacity:.4'"}>50:50</button></div><div class="msg"></div></div><div class="ladder">${STEPS.map((s, i) => `<div class="${i === lvl ? "cur" : i < lvl ? "won" : ""} ${i === 3 || i === 7 ? "safe" : ""}"><span>${i + 1}</span><span>${s} Punkte</span></div>`).join("")}</div></div>`;
+    const O = $(".mopts", body);
+    opts.forEach((o, i) => { const b = h("button", { class: "mo" }, `<b>${"ABCD"[i]}</b>${o}`); b._o = o; b.onclick = () => answer(b, q); O.appendChild(b); });
+    $(".btn.y", body).onclick = () => { if (!joker) return; joker = false; let n = 0; shuffle([...O.children]).forEach(b => { if (b._o !== q.a && n < 2) { b.classList.add("gone"); n++; } }); $(".btn.y", body).disabled = true; $(".btn.y", body).style.opacity = .4; };
+  };
+  const answer = (b, q) => {
+    body.querySelectorAll(".mo").forEach(x => { x.disabled = true; if (x._o === q.a) x.classList.add("ok"); });
+    const m = $(".msg", body);
+    if (b._o === q.a) {
+      lvl++;
+      if (lvl === STEPS.length) { saveBest("million", "1 000 000 Punkte", 12); body.innerHTML = `<div class="end"><div class="big">MILLIONÄR! 🎉</div><div class="stars">⭐⭐⭐</div><p>Tu as répondu juste aux 12 questions !</p><div class="row"><button class="btn y">Nochmal ↻</button></div></div>`; $(".btn", body).onclick = start; return; }
+      m.className = "msg ok"; m.textContent = "Richtig! ✔"; setTimeout(show, 900);
+    } else {
+      b.classList.add("ko"); const safe = lvl >= 8 ? 7 : lvl >= 4 ? 3 : -1, won = safe >= 0 ? STEPS[safe] : "0";
+      saveBest("million", `${won} Punkte`, safe + 1);
+      m.className = "msg ko"; m.innerHTML = `Falsch! La bonne réponse : <b>${q.a}</b>`;
+      setTimeout(() => { body.innerHTML = `<div class="end"><div class="big">${won} Punkte</div><p>Tu es arrivé·e à la question ${lvl + 1}.</p><div class="row"><button class="btn y">Nochmal ↻</button></div></div>`; $(".btn", body).onclick = start; }, 1800);
+    }
+  };
+  start();
+});
+
+/* 7. Galgenmännchen */
+app("galgen", "Galgenmännchen", "Devine le mot allemand lettre par lettre.", "🔤", "#EEF1F6", body => {
+  body.innerHTML = `<p class="fr">Lis la traduction française et trouve le nom allemand (sans l'article). Tu as droit à 8 erreurs.</p>`;
+  let theme = "all"; const g = h("div"); let wins = 0;
+  themeSeg(body, k => { theme = k; run(); }); body.appendChild(g);
+  const parts = ['<path d="M20 190h120"/>', '<path d="M50 190V20"/>', '<path d="M50 20h80"/>', '<path d="M130 20v25"/>', '<circle cx="130" cy="60" r="15"/>', '<path d="M130 75v50"/>', '<path d="M130 90l-22 18M130 90l22 18"/>', '<path d="M130 125l-20 30M130 125l20 30"/>'];
+  const run = () => {
+    const list = NOUNS.filter(x => theme === "all" || x.t === theme);
+    const x = rnd(list), W = x.de.toUpperCase(); let miss = 0; const got = new Set();
+    g.innerHTML = `<div class="hg"><svg viewBox="0 0 180 200" style="width:100%;max-width:200px"><g fill="none" stroke="#1B2A52" stroke-width="5" stroke-linecap="round" class="gal"></g></svg><div><div class="clue">« ${x.fr} »<small>${{ m: "der", f: "die", n: "das" }[x.g]} … · ${W.replace(/[^A-ZÄÖÜ]/g, "").length} lettres</small></div><div class="word"></div><div class="keys"></div><div class="msg"></div></div></div>`;
+    const draw = () => { $(".word", g).innerHTML = [...W].map(c => /[A-ZÄÖÜ]/.test(c) ? `<span>${got.has(c) ? c : ""}</span>` : `<span class="sp">${c}</span>`).join(""); $(".gal", g).innerHTML = parts.slice(0, miss).join(""); };
+    const K = $(".keys", g);
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜ".split("").forEach(c => { const b = h("button", {}, c); b.onclick = () => {
+      if (b.disabled) return; b.disabled = true;
+      if (W.includes(c)) { b.classList.add("hit"); got.add(c); } else { b.classList.add("miss"); miss++; }
+      draw();
+      const done = [...W].every(ch => !/[A-ZÄÖÜ]/.test(ch) || got.has(ch)), m = $(".msg", g);
+      if (done || miss >= 8) { K.querySelectorAll("button").forEach(z => z.disabled = true);
+        if (done) { wins++; saveBest("galgen", `${wins} mot(s) trouvé(s) d'affilée`, wins); m.className = "msg ok"; m.innerHTML = `Super! <b>${x.full}</b> ✔`; } else { wins = 0; m.className = "msg ko"; m.innerHTML = `Dommage… C'était <b>${x.full}</b>.`; got.clear(); [...W].forEach(ch => got.add(ch)); draw(); }
+        const nb = h("button", { class: "btn y", style: "margin-top:10px" }, "Neues Wort →"); nb.onclick = run; m.appendChild(h("br")); m.appendChild(nb); }
+    }; K.appendChild(b); });
+    draw();
+  };
+  run();
+});
+
+/* ---------- navigation ---------- */
+const main = $("#main");
+function home() {
+  main.innerHTML = `<div class="grid"></div>`;
+  APPS.forEach(a => { const b = store.get(a.id); const t = h("button", { class: "app" }, `<span class="ic" style="background:${a.bg}">${a.ic}</span><b>${a.name}</b><small>${a.desc}</small><span class="best">${b ? "Record : " + b.t : ""}</span>`); t.onclick = () => go(a.id); $(".grid", main).appendChild(t); });
+}
+function go(id) {
+  const a = APPS.find(x => x.id === id);
+  if (!a) { home(); if (location.hash) history.replaceState(null, "", location.pathname); return; }
+  main.innerHTML = `<div class="top"><button class="back">← Toutes les apps</button><span class="title">${a.ic} ${a.name}</span></div><div class="panel"></div>`;
+  $(".back", main).onclick = () => { location.hash = ""; };
+  a.build($(".panel", main));
+  if (location.hash !== "#" + id) history.replaceState(null, "", "#" + id);
+  window.scrollTo(0, 0);
+}
+window.addEventListener("hashchange", () => go(location.hash.slice(1)));
+go(location.hash.slice(1));
+</script>
+</body>
+</html>
